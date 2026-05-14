@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ga">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRS149 · Na hAimsirí & Saol na hOllscoile</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:     #090b10;
+  --s1:     #10141c;
+  --s2:     #161c28;
+  --s3:     #1e2638;
+  --bord:   #222d42;
+  --gold:   #c8983a;
+  --teal:   #38b89c;
+  --violet: #7c6cdb;
+  --red:    #d95555;
+  --green:  #3aac70;
+  --text:   #c8d4e8;
+  --dim:    #6880a0;
+  --muted:  #394d68;
+  --tip:    #0d1a28;
+  --tcol:   #4fa8d8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.65; }
+
+header {
+  background: var(--s1);
+  border-bottom: 2px solid var(--gold);
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+header h1 { font-family: 'DM Mono', monospace; font-size: 1.1rem; color: var(--gold); }
+header p  { color: var(--dim); font-size: 0.78rem; margin-top: 2px; }
+.score-wrap { display: flex; gap: 10px; align-items: center; }
+.score-badge { background: var(--s3); border: 2px solid var(--gold); border-radius: 8px; padding: 6px 16px; text-align: center; min-width: 80px; }
+.score-badge .pts { font-family: 'DM Mono', monospace; font-size: 1.5rem; color: var(--gold); font-weight: 500; }
+.score-badge .lbl { font-size: 0.68rem; color: var(--dim); }
+
+.tabs {
+  background: var(--s1); border-bottom: 1px solid var(--bord);
+  display: flex; overflow-x: auto; padding: 0 12px;
+}
+.tab {
+  background: none; border: none; border-bottom: 3px solid transparent;
+  color: var(--dim); cursor: pointer; font-family: 'DM Sans', sans-serif;
+  font-size: 0.73rem; font-weight: 700; letter-spacing: 0.04em;
+  padding: 10px 11px 8px; text-transform: uppercase; white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.tab:hover { color: var(--text); }
+.tab.on { color: var(--gold); border-bottom-color: var(--gold); }
+
+.panel { display: none; padding: 18px 15px; max-width: 860px; margin: 0 auto; }
+.panel.on { display: block; }
+
+/* Notes */
+.ns  { background: var(--s1); border: 1px solid var(--bord); border-radius: 8px; margin-bottom: 14px; overflow: hidden; }
+.nsh { background: var(--s2); border-bottom: 1px solid var(--bord); color: var(--gold); font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 0.08em; padding: 8px 13px; text-transform: uppercase; }
+.nsb { padding: 13px 15px; }
+.bi  { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--bord); border-radius: 6px; overflow: hidden; margin-bottom: 10px; }
+.biga { padding: 10px 12px; border-right: 1px solid var(--bord); }
+.bien { padding: 10px 12px; color: var(--dim); font-style: italic; }
+.bilbl { color: var(--muted); font-size: 0.67rem; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+.nt { background: var(--tip); border-left: 3px solid var(--tcol); border-radius: 4px; color: var(--tcol); font-size: 0.81rem; padding: 7px 11px; margin: 7px 0; }
+.gt { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 8px 0; }
+.gt th { background: var(--s2); border-bottom: 2px solid var(--bord); color: var(--dim); font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; padding: 6px 9px; text-align: left; text-transform: uppercase; }
+.gt td { border-bottom: 1px solid var(--bord); padding: 6px 9px; vertical-align: top; font-size: 0.85rem; }
+.gt tr:hover td { background: #0e1320; }
+.hi  { color: var(--teal); font-family: 'DM Mono', monospace; font-weight: 500; }
+.vi  { color: var(--violet); font-family: 'DM Mono', monospace; font-weight: 500; }
+.go  { color: var(--gold); font-family: 'DM Mono', monospace; font-weight: 500; }
+.conj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.conj-box { background: var(--s2); border: 1px solid var(--bord); border-radius: 6px; padding: 10px 12px; }
+.conj-box h4 { color: var(--gold); font-family: 'DM Mono', monospace; font-size: 0.73rem; letter-spacing: 0.07em; margin-bottom: 7px; text-transform: uppercase; }
+.cf { display: flex; justify-content: space-between; font-size: 0.84rem; padding: 2px 0; border-bottom: 1px solid #1a2234; }
+.cf:last-child { border: none; }
+.cf-ga { color: var(--teal); }
+.cf-en { color: var(--dim); font-size: 0.78rem; }
+
+/* Section head */
+.sh { background: linear-gradient(90deg, var(--s2) 0%, var(--s1) 100%); border: 1px solid var(--bord); border-radius: 8px; margin-bottom: 14px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; }
+.sh h2 { color: var(--gold); font-family: 'DM Mono', monospace; font-size: 0.88rem; }
+.sh p  { color: var(--dim); font-size: 0.78rem; margin-top: 2px; }
+.sec-sc { color: var(--dim); font-family: 'DM Mono', monospace; font-size: 0.78rem; white-space: nowrap; }
+.sec-sc span { color: var(--gold); }
+
+/* Question cards */
+.qcard { background: var(--s1); border: 1px solid var(--bord); border-radius: 9px; margin-bottom: 15px; overflow: hidden; transition: border-color .2s; }
+.qcard.ok  { border-color: var(--green); }
+.qcard.err { border-color: var(--red); }
+.qcard.skp { border-color: var(--muted); }
+.qctop { background: var(--s2); border-bottom: 1px solid var(--bord); padding: 7px 13px; display: flex; justify-content: space-between; align-items: center; font-family: 'DM Mono', monospace; font-size: 0.71rem; color: var(--dim); }
+.qn { color: var(--gold); font-weight: 500; }
+.qp { color: var(--teal); }
+.qcbody { padding: 16px 14px 12px; }
+.qen { color: var(--dim); font-style: italic; font-size: 0.88rem; margin-bottom: 5px; }
+.qga { color: var(--text); font-size: 1rem; margin-bottom: 12px; font-weight: 500; line-height: 1.4; }
+.qhint { color: var(--violet); font-size: 0.8rem; margin-bottom: 12px; margin-top: -6px; font-style: italic; }
+
+/* MC */
+.mcg { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 8px; }
+.mco { background: var(--s2); border: 2px solid var(--bord); border-radius: 6px; color: var(--text); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; padding: 8px 11px; text-align: left; transition: border-color .15s, background .15s; line-height: 1.35; }
+.mco:hover:not(:disabled) { border-color: var(--gold); background: var(--s3); }
+.mco.sel { border-color: var(--gold); background: var(--s3); }
+.mco.cok { border-color: var(--green) !important; background: #091a0f !important; color: var(--green) !important; }
+.mco.cer { border-color: var(--red)   !important; background: #190909 !important; color: var(--red)   !important; }
+.mco:disabled { cursor: default; opacity: 0.9; }
+
+/* Input */
+.aw { display: flex; gap: 7px; margin-bottom: 8px; }
+.ainp { background: #060910; border: 2px solid var(--bord); border-radius: 6px; color: var(--text); flex: 1; font-family: 'DM Mono', monospace; font-size: 0.93rem; padding: 8px 11px; transition: border-color .15s; }
+.ainp:focus { border-color: var(--teal); outline: none; }
+.ainp.ok-i { border-color: var(--green); background: #071410; }
+.ainp.er-i { border-color: var(--red);   background: #140707; }
+.ainp:disabled { opacity: 0.75; }
+
+/* Buttons */
+.btn { background: var(--s2); border: 2px solid var(--bord); border-radius: 6px; color: var(--text); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 700; padding: 7px 15px; transition: all .15s; white-space: nowrap; }
+.btn:hover { border-color: var(--teal); color: var(--teal); }
+.btn-chk { background: #091c1a; border-color: var(--teal); color: var(--teal); font-size: 0.88rem; padding: 8px 18px; }
+.btn-chk:hover { background: #0f2420; }
+.btn-rev { border-color: var(--muted); color: var(--dim); }
+.btn-mk  { background: #0d1f0d; border-color: var(--green); color: var(--green); font-size: 0.78rem; display: none; margin-top: 4px; }
+
+/* Feedback */
+.fb { display: none; border-radius: 6px; margin-top: 7px; overflow: hidden; }
+.fb.show { display: block; }
+.fbtop { padding: 7px 12px; font-weight: 700; font-size: 0.85rem; font-family: 'DM Mono', monospace; }
+.fb-ok  { background: #091a0f; color: var(--green); }
+.fb-er  { background: #190909; color: var(--red); }
+.fb-sk  { background: var(--s3); color: var(--dim); }
+.fbbody { background: var(--tip); border-top: 1px solid var(--bord); padding: 9px 12px; }
+.fb-ans { color: var(--gold); font-family: 'DM Mono', monospace; font-size: 0.88rem; margin-bottom: 4px; }
+.fb-tip { color: var(--tcol); font-size: 0.81rem; margin-top: 5px; line-height: 1.5; }
+.fb-alt { color: var(--dim); font-family: 'DM Mono', monospace; font-size: 0.81rem; margin: 3px 0; }
+
+@media(max-width:540px) {
+  .mcg { grid-template-columns: 1fr; }
+  .bi  { grid-template-columns: 1fr; }
+  .biga { border-right: none; border-bottom: 1px solid var(--bord); }
+  .conj-grid { grid-template-columns: 1fr; }
+  .aw { flex-direction: column; }
+  .btn-chk { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>IRS149 · Na hAimsirí & Saol na hOllscoile</h1>
+    <p>Seachtain 2 · 1ú & 2ú Réimniú · Briathra Mírialta</p>
+  </div>
+  <div class="score-wrap">
+    <div class="score-badge">
+      <div class="pts" id="total-pts">0</div>
+      <div class="lbl">marcanna</div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab on"  onclick="T('notes',this)">📖 Nótaí</button>
+  <button class="tab" onclick="T('sec-a',this)">A · Aithint Aimsire</button>
+  <button class="tab" onclick="T('sec-b',this)">B · Athraigh Briathar</button>
+  <button class="tab" onclick="T('sec-c',this)">C · Aistriúchán</button>
+  <button class="tab" onclick="T('sec-d',this)">D · Stór Focal</button>
+</nav>
+
+<!-- ════════════════ NOTES ════════════════ -->
+<div id="notes" class="panel on">
+
+  <div class="ns">
+    <div class="nsh">1 · An Chéad Réimniú · 1st Conjugation</div>
+    <div class="nsb">
+      <div class="bi" style="margin-bottom:10px">
+        <div class="biga"><div class="bilbl">Gaeilge</div>Briathra aonsiollacha den chuid is mó. Críochnaíonn an gas ar chonsan leathan nó caol.</div>
+        <div class="bien"><div class="bilbl">English</div>Mostly one-syllable stems ending in a broad or slender consonant. E.g. glan, caith, siúil, ól, fill.</div>
+      </div>
+      <table class="gt">
+        <thead><tr><th>Aimsir · Tense</th><th>Leathan (glan)</th><th>Caol (caith)</th><th>Iarmhír · Ending</th><th>Maisiú · Mutation</th></tr></thead>
+        <tbody>
+          <tr><td>Láithreach</td><td class="hi">glanaim / glanann tú</td><td class="hi">caithim / caitheann tú</td><td>-ann/-eann</td><td>Ní + séimhiú; An + urú</td></tr>
+          <tr><td>Caite</td><td class="hi">ghlan mé</td><td class="hi">chaith mé</td><td>séimhiú ar ghas</td><td>Níor + séimhiú; Ar + séimhiú</td></tr>
+          <tr><td>Fáistineach</td><td class="hi">glanfaidh mé</td><td class="hi">caithfidh mé</td><td>-faidh/-fidh</td><td>Ní + séimhiú; An + urú</td></tr>
+          <tr><td>Gnáthchaite</td><td class="hi">ghlanainn</td><td class="hi">chaithinn</td><td>séimhiú + -ainn/-inn</td><td>Ní + séimhiú; An + urú</td></tr>
+          <tr><td>Coinníollach</td><td class="hi">ghlanfainn</td><td class="hi">chaithfinn</td><td>séimhiú + -fainn/-finn</td><td>Ní + séimhiú; An + urú</td></tr>
+          <tr><td>Modh Ordaitheach</td><td class="hi">glan! / glanaigí!</td><td class="hi">caith! / caithigí!</td><td>gas = 2ú pearsa</td><td>Ná (+ h roimh ghuta)</td></tr>
+          <tr><td>Foshuiteach</td><td class="hi">go nglana</td><td class="hi">go gcaithe</td><td>go + urú + -a/-e</td><td>go + urú</td></tr>
+        </tbody>
+      </table>
+      <div class="nt"><strong>Aonair tosaigh le guta:</strong> Cuirtear <em>d'</em> roimh bhriathar a thosaíonn le guta nó f+guta san aimsir chaite agus sa mhodh coinníollach: d'ól mé, d'fhág mé.<br><strong>Vowel-initial stems:</strong> Prefix d' in past and conditional: d'ól mé (I drank), d'fhág mé (I left).</div>
+    </div>
+  </div>
+
+  <div class="ns">
+    <div class="nsh">2 · An Dara Réimniú · 2nd Conjugation</div>
+    <div class="nsb">
+      <div class="bi" style="margin-bottom:10px">
+        <div class="biga"><div class="bilbl">Gaeilge</div>Briathra déshiollacha den chuid is mó a chríochnaíonn ar -igh nó -il/-in/-ir/-is. Sa chuid is mó cásanna, crapadh -igh go -í sna foirmeacha táthaithe.</div>
+        <div class="bien"><div class="bilbl">English</div>Mostly two-syllable stems ending in -igh or -il/-in/-ir/-is. The -igh contracts to -í in most inflected forms. E.g. tosaigh, mínigh, aontaigh, cosain, freastail.</div>
+      </div>
+      <table class="gt">
+        <thead><tr><th>Aimsir</th><th>Leathan (tosaigh)</th><th>Caol (imigh)</th><th>Iarmhír</th></tr></thead>
+        <tbody>
+          <tr><td>Láithreach</td><td class="vi">tosaím / tosaíonn tú</td><td class="vi">imím / imíonn tú</td><td>-aíonn/-íonn</td></tr>
+          <tr><td>Caite</td><td class="vi">thosaigh mé</td><td class="vi">d'imigh mé</td><td>séimhiú ar ghas</td></tr>
+          <tr><td>Fáistineach</td><td class="vi">tosóidh mé</td><td class="vi">imeoidh mé</td><td>-óidh/-eoidh</td></tr>
+          <tr><td>Gnáthchaite</td><td class="vi">thosaínn</td><td class="vi">d'imínn</td><td>séimhiú + -aínn/-ínn</td></tr>
+          <tr><td>Coinníollach</td><td class="vi">thosóinn</td><td class="vi">d'imeoinn</td><td>séimhiú + -óinn/-eoinn</td></tr>
+          <tr><td>Modh Ordaitheach</td><td class="vi">tosaigh! / tosaígí!</td><td class="vi">imigh! / imígí!</td><td>gas díreach</td></tr>
+          <tr><td>Foshuiteach</td><td class="vi">go dtosaí</td><td class="vi">go n-imí</td><td>go + urú + -aí/-í</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ns">
+    <div class="nsh">3 · Briathra Mírialta · Irregular Verbs — Key Forms</div>
+    <div class="nsb">
+      <table class="gt">
+        <thead><tr><th>Briathar</th><th>Caite</th><th>Láithreach</th><th>Fáistineach</th><th>Diúltach Caite</th></tr></thead>
+        <tbody>
+          <tr><td class="go">abair</td><td class="hi">dúirt</td><td class="vi">deir</td><td class="hi">déarfaidh</td><td>ní dúirt</td></tr>
+          <tr><td class="go">beir</td><td class="hi">rug</td><td class="vi">beireann</td><td class="hi">béarfaidh</td><td>níor rug</td></tr>
+          <tr><td class="go">bí</td><td class="hi">bhí</td><td class="vi">tá/bíonn</td><td class="hi">beidh</td><td>ní raibh / níl</td></tr>
+          <tr><td class="go">cluin</td><td class="hi">chuala</td><td class="vi">cluineann</td><td class="hi">cluinfidh</td><td>níor chuala</td></tr>
+          <tr><td class="go">déan</td><td class="hi">rinne</td><td class="vi">déanann</td><td class="hi">déanfaidh</td><td>ní dhearna</td></tr>
+          <tr><td class="go">faigh</td><td class="hi">fuair</td><td class="vi">faigheann</td><td class="hi">gheobhaidh</td><td>ní bhfuair</td></tr>
+          <tr><td class="go">feic</td><td class="hi">chonaic</td><td class="vi">feiceann</td><td class="hi">feicfidh</td><td>ní fhaca</td></tr>
+          <tr><td class="go">ith</td><td class="hi">d'ith</td><td class="vi">itheann</td><td class="hi">íosfaidh</td><td>níor ith</td></tr>
+          <tr><td class="go">tabhair</td><td class="hi">thug</td><td class="vi">tugann</td><td class="hi">tabharfaidh</td><td>níor thug</td></tr>
+          <tr><td class="go">tar</td><td class="hi">tháinig</td><td class="vi">tagann</td><td class="hi">tiocfaidh</td><td>níor tháinig</td></tr>
+          <tr><td class="go">téigh</td><td class="hi">chuaigh</td><td class="vi">téann</td><td class="hi">rachaidh</td><td>ní dheachaigh</td></tr>
+        </tbody>
+      </table>
+      <div class="nt"><strong>Foirm spleách · Dependent form:</strong> I ndiaidh cáithníní mar go, nach, an, ní etc. — úsáidtear foirm spleách. Bí: go raibh / an raibh / nach raibh. Téigh: go ndeachaigh / an ndeachaigh. Faigh: go bhfuair / an bhfuair.<br><strong>After particles:</strong> go raibh, nach raibh, go ndeachaigh, go bhfuair, go ndearna etc.</div>
+    </div>
+  </div>
+
+  <div class="ns">
+    <div class="nsh">4 · Rialacha Maisithe · Mutation Rules Summary</div>
+    <div class="nsb">
+      <table class="gt">
+        <thead><tr><th>Comhthéacs · Context</th><th>Maisiú · Mutation</th><th>Sampla</th></tr></thead>
+        <tbody>
+          <tr><td>Past / Past Habitual / Conditional — all persons</td><td><strong>Séimhiú</strong> ar thús consain</td><td>glan → <span class="hi">ghlan</span>; caith → <span class="hi">chaith</span></td></tr>
+          <tr><td>Past negative: <em>níor</em></td><td><strong>Séimhiú</strong></td><td>níor <span class="hi">ghlan</span>; níor <span class="hi">chaith</span></td></tr>
+          <tr><td>Past question: <em>ar</em></td><td><strong>Séimhiú</strong></td><td>ar <span class="hi">ghlan</span> tú?</td></tr>
+          <tr><td>Present negative: <em>ní</em></td><td><strong>Séimhiú</strong></td><td>ní <span class="hi">ghlanann</span>; ní <span class="hi">fhillim</span></td></tr>
+          <tr><td>Present question: <em>an</em></td><td><strong>Urú</strong></td><td>an <span class="vi">nglanaim</span>?; an <span class="vi">mbíonn</span>?</td></tr>
+          <tr><td>Future negative: <em>ní</em></td><td><strong>Séimhiú</strong></td><td>ní <span class="hi">ghlanfaidh</span></td></tr>
+          <tr><td>Future question: <em>an</em></td><td><strong>Urú</strong></td><td>an <span class="vi">nglanfaidh</span>?</td></tr>
+          <tr><td>Subordinate: <em>go</em></td><td><strong>Urú</strong></td><td>go <span class="vi">nglanaim</span>; go <span class="vi">mbeidh</span></td></tr>
+          <tr><td>Neg. subord.: <em>nach</em></td><td><strong>Urú</strong></td><td>nach <span class="vi">nglanann</span></td></tr>
+          <tr><td>Subjunctive: <em>go</em></td><td><strong>Urú</strong></td><td>go <span class="vi">nglana</span>; go <span class="vi">dtosaí</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ns">
+    <div class="nsh">5 · Stór Focal · University Life</div>
+    <div class="nsb">
+      <div class="conj-grid">
+        <div class="conj-box">
+          <h4>Téarmaí · Terms</h4>
+          <div class="cf"><span class="cf-ga">Campas</span><span class="cf-en">Campus</span></div>
+          <div class="cf"><span class="cf-ga">Léacht</span><span class="cf-en">Lecture</span></div>
+          <div class="cf"><span class="cf-ga">Léachtlann</span><span class="cf-en">Lecture theatre</span></div>
+          <div class="cf"><span class="cf-ga">Léachtóir</span><span class="cf-en">Lecturer</span></div>
+          <div class="cf"><span class="cf-ga">Modúl</span><span class="cf-en">Module</span></div>
+          <div class="cf"><span class="cf-ga">Siollabas</span><span class="cf-en">Syllabus</span></div>
+          <div class="cf"><span class="cf-ga">Seimineár</span><span class="cf-en">Seminar</span></div>
+          <div class="cf"><span class="cf-ga">Rang teagaisc</span><span class="cf-en">Tutorial</span></div>
+          <div class="cf"><span class="cf-ga">Measúnú</span><span class="cf-en">Assessment</span></div>
+          <div class="cf"><span class="cf-ga">Clárú</span><span class="cf-en">Enrolment</span></div>
+        </div>
+        <div class="conj-box">
+          <h4>Frásaí · Phrases</h4>
+          <div class="cf"><span class="cf-ga">Céim le gradam</span><span class="cf-en">Pass with Distinction</span></div>
+          <div class="cf"><span class="cf-ga">Pas le hardmholadh</span><span class="cf-en">Pass with Commendation</span></div>
+          <div class="cf"><span class="cf-ga">Máistreacht</span><span class="cf-en">Masters</span></div>
+          <div class="cf"><span class="cf-ga">Athshuí</span><span class="cf-en">Re-sit</span></div>
+          <div class="cf"><span class="cf-ga">Cúinsí maolaitheacha</span><span class="cf-en">Extenuating circumstances</span></div>
+          <div class="cf"><span class="cf-ga">Aontas na Mac Léinn</span><span class="cf-en">Students' Union</span></div>
+          <div class="cf"><span class="cf-ga">Comhairleoir léinn</span><span class="cf-en">Advisor of studies</span></div>
+          <div class="cf"><span class="cf-ga">Tá mé idir dhá chomhairle</span><span class="cf-en">I'm in two minds</span></div>
+          <div class="cf"><span class="cf-ga">Is beag orm</span><span class="cf-en">I hate / I dislike greatly</span></div>
+          <div class="cf"><span class="cf-ga">Is aoibhinn beatha an scoláire</span><span class="cf-en">Students have a great life</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ A: AITHINT AIMSIRE ════════════════ -->
+<div id="sec-a" class="panel">
+  <div class="sh">
+    <div><h2>A · Aithint Aimsire</h2><p>Cliceáil an freagra ceart · Click the correct answer</p></div>
+    <div class="sec-sc">Marcanna: <span id="sc-a">0</span> / <span id="sct-a">0</span></div>
+  </div>
+  <div id="qa"></div>
+</div>
+
+<!-- ════════════════ B: ATHRAIGH BRIATHAR ════════════════ -->
+<div id="sec-b" class="panel">
+  <div class="sh">
+    <div><h2>B · Athraigh an Briathar</h2><p>Athraigh go dtí an aimsir agus an phearsa atá luaite</p></div>
+    <div class="sec-sc">Marcanna: <span id="sc-b">0</span> / <span id="sct-b">0</span></div>
+  </div>
+  <div id="qb"></div>
+</div>
+
+<!-- ════════════════ C: AISTRIÚCHÁN ════════════════ -->
+<div id="sec-c" class="panel">
+  <div class="sh">
+    <div><h2>C · Aistriúchán</h2><p>Aistrigh go Gaeilge · Translate to Irish</p></div>
+    <div class="sec-sc">Marcanna: <span id="sc-c">0</span> / <span id="sct-c">0</span></div>
+  </div>
+  <div id="qc"></div>
+</div>
+
+<!-- ════════════════ D: STÓR FOCAL ════════════════ -->
+<div id="sec-d" class="panel">
+  <div class="sh">
+    <div><h2>D · Stór Focal Ollscoile</h2><p>Cliceáil an leagan Gaeilge ceart · Click the correct Irish term</p></div>
+    <div class="sec-sc">Marcanna: <span id="sc-d">0</span> / <span id="sct-d">0</span></div>
+  </div>
+  <div id="qd"></div>
+</div>
+
+<script>
+// ══════════════════ UTILITIES ══════════════════
+function norm(s) {
+  return s.toLowerCase()
+    .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
+    .replace(/[''`]/g,"'").replace(/[^a-z0-9' ]/g,' ').replace(/\s+/g,' ').trim();
+}
+function check(user, answers) {
+  const u = norm(user);
+  if (!u) return false;
+  for (const a of answers) {
+    const n = norm(a);
+    if (u === n) return true;
+    const ut = u.split(' ').filter(x=>x.length>1);
+    const nt = n.split(' ').filter(x=>x.length>1);
+    if (nt.length <= 3) {
+      if (ut.length !== nt.length) continue;
+      let d = 0;
+      for (let i=0;i<nt.length;i++) if (ut[i]!==nt[i]) d++;
+      if (d<=1) return true;
+    } else {
+      const hits = nt.filter(t=>u.includes(t));
+      if (hits.length/nt.length >= 0.72) return true;
+    }
+  }
+  return false;
+}
+function shuffle(a) { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+function pick4(correct, pool) {
+  const others = shuffle(pool.filter(x=>x!==correct));
+  const opts = shuffle([correct,...others.slice(0,3)]);
+  return { opts, idx: opts.indexOf(correct) };
+}
+
+// ══════════════════ SCORE ══════════════════
+const sc = {a:0,b:0,c:0,d:0};
+const st = {a:0,b:0,c:0,d:0};
+function addSc(sec,pts) {
+  sc[sec]+=pts;
+  document.getElementById('sc-'+sec).textContent=sc[sec];
+  let t=0; for(const k in sc) t+=sc[k];
+  document.getElementById('total-pts').textContent=t;
+}
+function addTot(sec,pts){ st[sec]+=pts; document.getElementById('sct-'+sec).textContent=st[sec]; }
+
+// ══════════════════ BUILD MC ══════════════════
+function buildMC(cont, sec, id, num, pts, prompt, hint, opts, cidx, ans, tip) {
+  addTot(sec,pts);
+  const d=document.createElement('div'); d.className='qcard'; d.id=`q-${sec}-${id}`;
+  const ohtml=opts.map((o,i)=>`<button class="mco" id="o-${sec}-${id}-${i}" onclick="pickMC('${sec}','${id}',${i},${cidx},${pts},'${encodeURIComponent(tip)}')">${o}</button>`).join('');
+  d.innerHTML=`<div class="qctop"><span class="qn">C${num}</span><span class="qp">${pts}m</span></div>
+<div class="qcbody">
+<div class="qga">${prompt}</div>
+${hint?`<div class="qhint">💡 ${hint}</div>`:''}
+<div class="mcg" id="mg-${sec}-${id}">${ohtml}</div>
+<div class="fb" id="fb-${sec}-${id}"><div class="fbtop" id="fbt-${sec}-${id}"></div><div class="fbbody"><div class="fb-ans" id="fba-${sec}-${id}"></div><div class="fb-tip" id="fbtip-${sec}-${id}"></div></div></div>
+</div>`;
+  cont.appendChild(d);
+}
+window.pickMC=function(sec,id,chosen,correct,pts,tipEnc){
+  const tip=decodeURIComponent(tipEnc);
+  document.querySelectorAll(`#mg-${sec}-${id} .mco`).forEach(b=>b.disabled=true);
+  const ok=chosen===correct;
+  const card=document.getElementById(`q-${sec}-${id}`);
+  card.classList.add(ok?'ok':'err');
+  document.getElementById(`o-${sec}-${id}-${correct}`).classList.add('cok');
+  if(!ok) document.getElementById(`o-${sec}-${id}-${chosen}`).classList.add('cer');
+  const fb=document.getElementById(`fb-${sec}-${id}`);
+  const fbt=document.getElementById(`fbt-${sec}-${id}`);
+  const fbtip=document.getElementById(`fbtip-${sec}-${id}`);
+  fbt.className='fbtop '+(ok?'fb-ok':'fb-er');
+  fbt.textContent=ok?`✓ Ceart! +${pts} marc`:'✗ Mícheart';
+  fbtip.innerHTML=tip;
+  fb.classList.add('show');
+  if(ok) addSc(sec,pts);
+};
+
+// ══════════════════ BUILD TEXT ══════════════════
+function buildTxt(cont, sec, id, num, pts, prompt, hint, answers, display, alt, tip) {
+  addTot(sec,pts);
+  const d=document.createElement('div'); d.className='qcard'; d.id=`q-${sec}-${id}`;
+  d.dataset.answers=JSON.stringify(answers);
+  d.dataset.display=display; d.dataset.alt=alt||''; d.dataset.tip=tip; d.dataset.scored='0';
+  d.innerHTML=`<div class="qctop"><span class="qn">C${num}</span><span class="qp">${pts}m</span></div>
+<div class="qcbody">
+<div class="qga">${prompt}</div>
+${hint?`<div class="qhint">💡 ${hint}</div>`:''}
+<div class="aw">
+<input class="ainp" id="inp-${sec}-${id}" type="text" placeholder="Scríobh do fhreagra…" onkeydown="if(event.key==='Enter')subTxt('${sec}','${id}',${pts})">
+<button class="btn btn-chk" onclick="subTxt('${sec}','${id}',${pts})">✓ Seiceáil</button>
+<button class="btn btn-rev" onclick="revTxt('${sec}','${id}',${pts})">Taispeáin</button>
+</div>
+<button class="btn btn-mk" id="mk-${sec}-${id}" onclick="markOk('${sec}','${id}',${pts})">✓ Bhí mé ceart — marc dom</button>
+<div class="fb" id="fb-${sec}-${id}">
+<div class="fbtop" id="fbt-${sec}-${id}"></div>
+<div class="fbbody">
+<div class="fb-ans" id="fba-${sec}-${id}"></div>
+<div class="fb-alt" id="fbalt-${sec}-${id}"></div>
+<div class="fb-tip" id="fbtip-${sec}-${id}"></div>
+</div></div>
+</div>`;
+  cont.appendChild(d);
+}
+window.subTxt=function(sec,id,pts){
+  const card=document.getElementById(`q-${sec}-${id}`);
+  if(card.dataset.scored==='1') return;
+  const val=document.getElementById(`inp-${sec}-${id}`).value.trim();
+  if(!val) return;
+  const answers=JSON.parse(card.dataset.answers);
+  const ok=check(val,answers);
+  card.dataset.scored='1';
+  const inp=document.getElementById(`inp-${sec}-${id}`);
+  inp.disabled=true; inp.classList.add(ok?'ok-i':'er-i');
+  card.classList.add(ok?'ok':'err');
+  const fbt=document.getElementById(`fbt-${sec}-${id}`);
+  fbt.className='fbtop '+(ok?'fb-ok':'fb-er');
+  fbt.textContent=ok?`✓ Ceart! +${pts} marc`:'✗ Mícheart — féach an freagra';
+  document.getElementById(`fba-${sec}-${id}`).textContent='Freagra: '+card.dataset.display;
+  const alt=card.dataset.alt;
+  const altEl=document.getElementById(`fbalt-${sec}-${id}`);
+  altEl.textContent=alt?'Freisin: '+alt:''; altEl.style.display=alt?'':'none';
+  document.getElementById(`fbtip-${sec}-${id}`).innerHTML=card.dataset.tip;
+  document.getElementById(`fb-${sec}-${id}`).classList.add('show');
+  if(ok) addSc(sec,pts);
+  else { const mk=document.getElementById(`mk-${sec}-${id}`); if(mk) mk.style.display='inline-block'; }
+};
+window.revTxt=function(sec,id,pts){
+  const card=document.getElementById(`q-${sec}-${id}`);
+  if(card.dataset.scored==='1') return;
+  card.dataset.scored='1';
+  document.getElementById(`inp-${sec}-${id}`).disabled=true;
+  card.classList.add('skp');
+  const fbt=document.getElementById(`fbt-${sec}-${id}`);
+  fbt.className='fbtop fb-sk'; fbt.textContent='Taispeánta — 0 marc';
+  document.getElementById(`fba-${sec}-${id}`).textContent='Freagra: '+card.dataset.display;
+  const alt=card.dataset.alt;
+  const altEl=document.getElementById(`fbalt-${sec}-${id}`);
+  altEl.textContent=alt?'Freisin: '+alt:''; altEl.style.display=alt?'':'none';
+  document.getElementById(`fbtip-${sec}-${id}`).innerHTML=card.dataset.tip;
+  document.getElementById(`fb-${sec}-${id}`).classList.add('show');
+};
+window.markOk=function(sec,id,pts){
+  const card=document.getElementById(`q-${sec}-${id}`);
+  if(card.dataset.extramark) return; card.dataset.extramark='1';
+  addSc(sec,pts);
+  const fbt=document.getElementById(`fbt-${sec}-${id}`);
+  fbt.className='fbtop fb-ok'; fbt.textContent=`✓ Marcáilte ceart! +${pts} marc`;
+  card.classList.remove('err'); card.classList.add('ok');
+  const inp=document.getElementById(`inp-${sec}-${id}`);
+  if(inp){ inp.classList.remove('er-i'); inp.classList.add('ok-i'); }
+  document.getElementById(`mk-${sec}-${id}`).style.display='none';
+};
+function T(id,btn){ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on')); document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on')); document.getElementById(id).classList.add('on'); btn.classList.add('on'); }
+
+// ══════════════════ DATA ══════════════════
+
+// ── SECTION A: Aithint Aimsire ──
+const tenses=['An Aimsir Láithreach (Present)','An Aimsir Chaite (Past)','An Aimsir Fháistineach (Future)','An Aimsir Ghnáthchaite (Past Habitual)','An Modh Coinníollach (Conditional)','An Modh Foshuiteach (Subjunctive)'];
+const conjs=['1ú Réimniú','2ú Réimniú','Mírialta'];
+
+const aData = [
+  { form:'Chonaic mé', ctx:'Chonaic mé Bríd inné', correct:'Aimsir Chaite · feic · Mírialta', pool:['Aimsir Chaite · feic · Mírialta','Aimsir Láithreach · feic · Mírialta','Aimsir Fháistineach · feic · Mírialta','Aimsir Chaite · feic · 1ú Réimniú'], tip:'GA: Aimsir chaite de "feic" — briathar mírialta. "Chonaic" = foirm iomlán athraithe (ní séimhiú simplí) sa chaite. EN: Past tense of irregular "feic". "Chonaic" is a suppletive form (completely different root in the past).'},
+  { form:'Caithfidh mé', ctx:'Caithfidh mé a rá…', correct:'Aimsir Fháistineach · caith · 1ú Réimniú', pool:['Aimsir Fháistineach · caith · 1ú Réimniú','Aimsir Chaite · caith · 1ú Réimniú','Aimsir Fháistineach · caith · 2ú Réimniú','Modh Coinníollach · caith · 1ú Réimniú'], tip:'GA: -fidh = iarmhír na hAimsire Fáistinigí, 1ú Réimniú caol. Caith (caol) → caithfidh. EN: -fidh is the future tense ending for slender-stem 1st conjugation verbs. Caith is 1st conjugation (one syllable).'},
+  { form:'Mhínigh sí', ctx:'Mhínigh sí go ndeachaigh sí…', correct:'Aimsir Chaite · mínigh · 2ú Réimniú', pool:['Aimsir Chaite · mínigh · 2ú Réimniú','Aimsir Chaite · mínigh · 1ú Réimniú','Aimsir Láithreach · mínigh · 2ú Réimniú','Modh Coinníollach · mínigh · 2ú Réimniú'], tip:'GA: Séimhiú san aimsir chaite (mínigh → mhínigh). 2ú Réimniú — dhá shiolla, críochnaíonn ar -igh. EN: Séimhiú marks the past tense. "Mínigh" is 2nd conjugation (two syllables, ends in -igh).'},
+  { form:'Téann sí', ctx:'Téann sí ag traenáil trí oíche sa tseachtain', correct:'Aimsir Láithreach · téigh · Mírialta', pool:['Aimsir Láithreach · téigh · Mírialta','Aimsir Ghnáthchaite · téigh · Mírialta','Aimsir Chaite · téigh · Mírialta','Aimsir Fháistineach · téigh · Mírialta'], tip:'GA: "Téann" = aimsir láithreach de "téigh" (mírialta). Ní mar "chuaigh" (caite) ná "rachaidh" (fáistineach). EN: "Téann" is the present tense of irregular "téigh". Past: chuaigh. Future: rachaidh.'},
+  { form:'Rachaimid', ctx:'Rachaimid le chéile an tseachtain seo chugainn', correct:'Aimsir Fháistineach · téigh · Mírialta', pool:['Aimsir Fháistineach · téigh · Mírialta','Aimsir Chaite · téigh · Mírialta','Aimsir Fháistineach · tar · Mírialta','Modh Coinníollach · téigh · Mírialta'], tip:'GA: "Rachaimid" = aimsir fháistineach iolra de "téigh" (foirm tháthaithe). Fuaimíonn sé cosúil leis an "ra" i "rachaidh". EN: Future 1st plural of irregular "téigh". Note the suppletive root (ra-) rather than the present tense root (té-).'},
+  { form:'D\'aontaigh mé', ctx:'D\'aontaigh mé léi', correct:'Aimsir Chaite · aontaigh · 2ú Réimniú', pool:['Aimsir Chaite · aontaigh · 2ú Réimniú','Aimsir Chaite · aontaigh · 1ú Réimniú','Modh Coinníollach · aontaigh · 2ú Réimniú','Aimsir Láithreach · aontaigh · 2ú Réimniú'], tip:'GA: D\' roimh "a" (guta) + séimhiú san aimsir chaite. 2ú Réimniú — aontaigh (dhá shiolla). EN: D\' before vowel-initial stems in the past. "Aontaigh" is 2nd conjugation. Past: d\'aontaigh.'},
+  { form:'Go mbeidh mé', ctx:'ach go mbeidh mé faoi bhrú', correct:'Aimsir Fháistineach (foirm spleách) · bí · Mírialta', pool:['Aimsir Fháistineach (foirm spleách) · bí · Mírialta','Aimsir Láithreach (foirm spleách) · bí · Mírialta','Modh Coinníollach (foirm spleách) · bí · Mírialta','Aimsir Fháistineach · bí · 1ú Réimniú'], tip:'GA: "Go mbeidh" = foirm spleách fháistineach de "bí". Urú (b→mb) i ndiaidh "go". EN: "Go mbeidh" = dependent future of "bí". Eclipsis after "go". Compare: beidh mé (independent) vs go mbeidh mé (dependent/subordinate).'},
+  { form:'Ní raibh', ctx:'Ní raibh muintir na háite sásta', correct:'Aimsir Chaite (diúltach) · bí · Mírialta', pool:['Aimsir Chaite (diúltach) · bí · Mírialta','Aimsir Láithreach (diúltach) · bí · Mírialta','Aimsir Chaite (diúltach) · bí · 1ú Réimniú','Modh Coinníollach (diúltach) · bí · Mírialta'], tip:'GA: "Ní raibh" = diúltach caite de "bí". Foirm spleách: "ní" + "raibh". Deifriúil ó "bhí" (dearfach) agus "níl" (diúltach láithreach). EN: "Ní raibh" = past negative of "bí". A dependent form — compare bhí (positive past) and níl (present negative).'},
+  { form:'Siúlfaimid', ctx:'Siúlfaimid ann le chéile', correct:'Aimsir Fháistineach · siúil · 1ú Réimniú', pool:['Aimsir Fháistineach · siúil · 1ú Réimniú','Aimsir Fháistineach · siúil · 2ú Réimniú','Modh Coinníollach · siúil · 1ú Réimniú','Aimsir Chaite · siúil · 1ú Réimniú'], tip:'GA: -faimid = foirm tháthaithe iolra na haimsire fáistinigí, 1ú Réimniú. Siúil → siúlfaimid. EN: -faimid is the synthetic 1st plural future ending for 1st conjugation. Siúil (walk) is 1st conjugation despite its two syllables.'},
+  { form:'Thosaínn', ctx:'Thosaínn ag obair gach lá', correct:'Aimsir Ghnáthchaite · tosaigh · 2ú Réimniú', pool:['Aimsir Ghnáthchaite · tosaigh · 2ú Réimniú','Aimsir Chaite · tosaigh · 2ú Réimniú','Modh Coinníollach · tosaigh · 2ú Réimniú','Aimsir Ghnáthchaite · tosaigh · 1ú Réimniú'], tip:'GA: Séimhiú + -aínn = aimsir ghnáthchaite, 2ú Réimniú, 1ú pearsa uatha. Tosaigh → thosaínn. EN: Séimhiú + -aínn suffix marks the 1st singular past habitual of 2nd conjugation verbs.'},
+  { form:'Ghlanfainn', ctx:'Ghlanfainn an teach dá mbeadh aga agam', correct:'Modh Coinníollach · glan · 1ú Réimniú', pool:['Modh Coinníollach · glan · 1ú Réimniú','Aimsir Ghnáthchaite · glan · 1ú Réimniú','Aimsir Chaite · glan · 1ú Réimniú','Modh Coinníollach · glan · 2ú Réimniú'], tip:'GA: Séimhiú + -fainn = modh coinníollach, 1ú pearsa uatha, 1ú Réimniú. Glan → ghlanfainn. EN: Séimhiú + -fainn suffix marks the 1st singular conditional of 1st conjugation verbs. Compare gnáthchaite: ghlanainn.'},
+  { form:'Go dtosaí', ctx:'Táim ag súil go dtosaí an rang', correct:'Modh Foshuiteach · tosaigh · 2ú Réimniú', pool:['Modh Foshuiteach · tosaigh · 2ú Réimniú','Aimsir Láithreach · tosaigh · 2ú Réimniú','Modh Foshuiteach · tosaigh · 1ú Réimniú','Aimsir Fháistineach · tosaigh · 2ú Réimniú'], tip:'GA: Go + urú + -aí = modh foshuiteach, 2ú Réimniú. "Go dtosaí" — urú ar t (tosaigh → dtosaí) + iarmhír -aí. EN: Subjunctive: go + eclipsis + -aí (2nd conjugation). Used to express wishes/hypotheticals.'},
+];
+
+// ── SECTION B: Athraigh an Briathar ──
+const bData = [
+  { q:'Rinne sí an obair.', target:'Aimsir Láithreach, 1ú pearsa iolra · Present, 1st plural', answers:['deanaimid an obair','déanaimid an obair','tá muid ag deanamh na hoibre'], display:'Déanaimid an obair.', alt:'Déanann muid an obair.', tip:'GA: Rinne → Déan (briathar mírialta). Aimsir Láithreach, 1ú pearsa iolra → Déanaimid (foirm tháthaithe) nó Déanann muid. EN: Déan is irregular. Present 1st plural: déanaimid / déanann muid.', pts:2},
+  { q:'Foghlaimeoidh sibh cuid mhór.', target:'Aimsir Chaite, 2ú pearsa uatha · Past, 2nd singular', answers:["d'fhoghlaim tu cuid mhor","d fhoghlaim tu cuid mhor"], display:"D'fhoghlaim tú cuid mhór.", alt:'', tip:"GA: Foghlaim → 2ú Réimniú. Aimsir chaite + d' roimh f+guta: d'fhoghlaim. 2ú pearsa uatha = tú. EN: 2nd conjugation. Past: d' + lenited stem. 'fhoghlaim' is lenited but still starts with f so d' is needed.", pts:2},
+  { q:'Ní cheannaíonn sí deochanna.', target:'Aimsir Fháistineach, 3ú pearsa iolra · Future, 3rd plural', answers:['ni cheannoidh siad deochanna','ní cheannóidh siad deochanna'], display:'Ní cheannóidh siad deochanna.', alt:'', tip:'GA: Ceannaigh → 2ú Réimniú. Aimsir fháistineach: -óidh. Ní + séimhiú. 3ú pearsa iolra → siad. EN: 2nd conjugation future ending: -óidh. Ní causes séimhiú (c→ch). 3rd plural = siad.', pts:2},
+  { q:'An bhfaca sibh na cluichí?', target:'Aimsir Láithreach, 2ú pearsa uatha · Present, 2nd singular', answers:['an bhfeiceann tu na cluichi','an bhfeiceann tú na cluichí'], display:'An bhfeiceann tú na cluichí?', alt:'', tip:'GA: Feic → mírialta. Láithreach: feiceann. An + urú (f→bhf). 2ú pearsa uatha = tú. EN: Irregular "feic". Present: feiceann. Question "an" causes eclipsis: feiceann → bhfeiceann.', pts:2},
+  { q:'Tuigim na rialacha uilig.', target:'Aimsir Chaite, 3ú pearsa uatha firinscneach, DIÚLTACH · Past, 3rd singular masc. NEGATIVE', answers:['nior thuig se na rialacha uilig','níor thuig sé na rialacha uilig'], display:'Níor thuig sé na rialacha uilig.', alt:'', tip:'GA: Tuig → 1ú Réimniú. Caite diúltach: Níor + séimhiú (t→th). 3ú pearsa uatha firinscneach = sé. EN: 1st conjugation. Past negative: níor + séimhiú. Tuig → thuig. 3rd singular masc = sé.', pts:2},
+  { q:'Nach n-ólfaidh tú tae?', target:'Aimsir Láithreach, 1ú pearsa uatha · Present, 1st singular', answers:['nach n-olaim an tae','nach n-olaim tae','nach nolaim an tae'], display:'Nach n-ólaim an tae?', alt:'Nach n-ólaim tae?', tip:"GA: Ól → 1ú Réimniú. Láithreach 1ú pearsa uatha: ólaim. Nach + urú (ó→n-ó). EN: 1st conjugation. Present 1st singular: ólaim. Nach (neg. question) causes eclipsis on vowel-initial verb: n- prefix.", pts:2},
+  { q:'Ní itheann sé feoil.', target:'Aimsir Fháistineach, 1ú pearsa iolra · Future, 1st plural', answers:['ni iosfaimid feoil','ní íosfaimid feoil'], display:'Ní íosfaimid feoil.', alt:'Ní íosfaidh muid feoil.', tip:'GA: Ith → mírialta. Fáistineach: íosfaidh. Ní + (gan séimhiú — tosaíonn le guta). 1ú pearsa iolra: íosfaimid nó íosfaidh muid. EN: Irregular "ith". Future: íosfaidh. 1st plural: íosfaimid (synthetic). Ní + vowel = no mutation.', pts:2},
+  { q:'An ndeachaigh siad amach?', target:'Aimsir Láithreach, 3ú pearsa uatha BAININSCNEACH · Present, 3rd singular FEMININE', answers:['an dteann si amach','an dtéann sí amach'], display:'An dtéann sí amach?', alt:'', tip:'GA: Téigh → mírialta. Láithreach: téann. An + urú (t→dt). 3ú pearsa uatha baininscneach = sí. EN: Irregular "téigh". Present: téann. Question "an" causes eclipsis: téann → dtéann. 3rd singular fem = sí.', pts:2},
+  { q:'Ní bhfaighidh tú faoiseamh.', target:'Aimsir Chaite, 2ú pearsa iolra · Past, 2nd plural', answers:['ni bhfuair sibh faoiseamh','ní bhfuair sibh faoiseamh'], display:'Ní bhfuair sibh faoiseamh.', alt:'', tip:'GA: Faigh → mírialta. Caite diúltach: ní bhfuair. 2ú pearsa iolra = sibh. EN: Irregular "faigh". Past negative: ní bhfuair (not níor — faigh uses ní in the past negative). 2nd plural = sibh.', pts:2},
+  { q:'Dúirt sé go ndéanann sé an obair.', target:'Aimsir Chaite (1ú pearsa uatha) — athraigh SÉ go MÉ · Change SÉ to MÉ throughout', answers:['duirt me go ndearna me an obair','dúirt mé go ndearna mé an obair'], display:'Dúirt mé go ndearna mé an obair.', alt:'', tip:'GA: Dúirt → mírialta (abair). Foirm spleách caite: go ndearna (ní go ndéanann sa chaite). Ag athrú ón 3ú pearsa go dtí an 1ú pearsa. EN: Note the change from present subordinate (go ndéanann) to past subordinate (go ndearna). Irregular déan: past dependent = go ndearna.', pts:2},
+];
+
+// ── SECTION C: Aistriúchán ──
+const cData = [
+  { en:'I did it once and I will do it again.', answers:['rinne me uair amhain e agus deanfaidh me aris e','rinne me uair amhain e agus deanfaidh me e aris'], display:'Rinne mé uair amháin é agus déanfaidh mé arís é.', alt:'', tip:'GA: Rinne → aimsir chaite mírialta (déan). Déanfaidh → aimsir fháistineach. EN: Past of déan = rinne. Future = déanfaidh. Note: "it" = é goes at end in Irish after the VN.', pts:2},
+  { en:'Seán will learn the rules that he didn't learn last year.', answers:['foghlaimeoidh sean na rialacha nar fhoghlaim se anuraidh','foghlaimeoidh seán na rialacha nár fhoghlaim sé anuraidh'], display:'Foghlaimeoidh Seán na rialacha nár fhoghlaim sé anuraidh.', alt:'', tip:'GA: Foghlaim → 2ú Réimniú, fáistineach: foghlaimeoidh. Nár (diúltach indíreach caite) + séimhiú (f→fh). EN: 2nd conjugation future: foghlaimeoidh. Past indirect negative: nár + séimhiú.', pts:2},
+  { en:'We broke the window by accident but we will pay to fix it.', answers:['bhris muid an fhuinneog de thaisme ach iocfaimid chun i a dheisiu','bhris muid an fhuinneog de thaisme ach iocfaidh muid chun i a dheisiu'], display:'Bhris muid an fhuinneog de thaisme ach íocfaimid chun í a dheisiú.', alt:'', tip:'GA: Bris → 1ú Réimniú caite: bhris (séimhiú). Íoc → fáistineach: íocfaimid. "De thaisme" = by accident. EN: Past: séimhiú on 1st conjugation. Future: íocfaimid. Chun + VN = to (do something).', pts:2},
+  { en:'I have no money but I will probably go out.', answers:['nil airgead ar bith agam ach is doca go rachaidh me amach','níl airgead ar bith agam ach is dócha go rachaidh mé amach'], display:'Níl airgead ar bith agam ach is dócha go rachaidh mé amach.', alt:'', tip:'GA: Níl = diúltach láithreach bí. Rachaidh → fáistineach mírialta "téigh". "Is dócha go" + urú. EN: Níl = present negative of bí. Future of téigh = rachaidh. "Is dócha go" (probably) triggers eclipsis.', pts:2},
+  { en:'I lost my school bag so please call me if you find it.', answers:['chaill me mo mhala scoile mar sin de cuir scairt orm ma thagann tu air','chaill me mo mhala scoile mar sin de cuir scairt orm ma thagann tu air'], display:'Chaill mé mo mhála scoile, mar sin de, cuir scairt orm má thagann tú air.', alt:'', tip:'GA: Caill → 1ú Réimniú caite: chaill (séimhiú). "Má" + séimhiú. Tagann → foirm láithreach de "tar". EN: Past: chaill. Cuir scairt ar = phone (phrasal). Má + séimhiú on following verb.', pts:2},
+  { en:"I didn't get your message but I will be available.", answers:['ni bhfuair me do theachtaireacht ach beidh me ar fail','ní bhfuair mé do theachtaireacht ach beidh mé ar fáil'], display:"Ní bhfuair mé do theachtaireacht ach beidh mé ar fáil.", alt:'', tip:'GA: Faigh → mírialta caite diúltach: ní bhfuair. Beidh → fáistineach bí. "Ar fáil" = available. EN: Past neg of faigh = ní bhfuair (not níor). Future of bí = beidh. "Ar fáil" = available.', pts:2},
+  { en:"Máire goes to Spain every year but I don't think she ever learnt Spanish.", answers:['teann maire chun na spainner gach bliain ach ni silim gur fhoghlaim si spainnís riamh','téann máire chun na spáinne gach bliain ach ní shílim gur fhoghlaim sí spáinnis riamh'], display:"Téann Máire chun na Spáinne gach bliain ach ní shílim gur fhoghlaim sí Spáinnis riamh.", alt:'', tip:'GA: Téann → láithreach de "téigh". Ní shílim → ní + séimhiú (s→sh). Gur fhoghlaim → indíreach caite (2ú Réimniú). EN: Present of téigh = téann. Ní + séimhiú on initial consonant. Past indirect: gur + séimhiú.', pts:2},
+  { en:'The teacher marked the work but he will not explain the answers.', answers:['mharcail an muinteoir an obair ach ni mhineoidh se na freagrai','mharcáil an múinteoir an obair ach ní mhíneoidh sé na freagraí'], display:'Mharcáil an múinteoir an obair ach ní mhíneoidh sé na freagraí.', alt:'', tip:'GA: Marcáil → 2ú Réimniú caite: mharcáil (séimhiú). Mínigh → ní + séimhiú + fáistineach 2ú Réimniú: ní mhíneoidh. EN: 2nd conjugation past: séimhiú. Future of mínigh: míneoidh. Ní + séimhiú for future negative.', pts:2},
+  { en:'If you travel regularly you will enjoy your life.', answers:['ma thaistealaionn tu go minic bainfidh tu sult as do shaol','má thaistealaíonn tú go minic bainfidh tú sult as do shaol'], display:'Má thaistealaíonn tú go minic bainfidh tú sult as do shaol.', alt:'', tip:'GA: Má + séimhiú (t→th). Taistealóidh → ní — úsáidtear láithreach le "má" don todhchaí freisin: thaistealaíonn. "Bain sult as" = enjoy. EN: Má (if) + séimhiú. Present after "má" expresses a future condition. "Bain sult as" = enjoy.', pts:2},
+  { en:'I played soccer once and I will never play it again.', answers:["d'imir me sacar aon uair amhain ach ni imreoidh me choiche go deo aris e","d imir me sacar aon uair amhain ach ni imreoidh me choiche arís e"], display:"D'imir mé sacar aon uair amháin ach ní imreoidh mé choíche go deo arís é.", alt:"D'imir mé sacar aon uair amháin ach ní imreoidh mé é choíche arís.", tip:"GA: Imir → 1ú Réimniú caite: d'imir mé (d' roimh ghuta). Ní imreoidh → fáistineach 1ú Réimniú. 'Choíche go deo arís' = never ever again. EN: Past: d' before vowel-initial stem. Future 1st conjugation: imreoidh. Ní + no mutation before vowel.", pts:2},
+];
+
+// ── SECTION D: Stór Focal ──
+const vocabPool = [
+  ['Campus','Campas','Siollabas','Léachtlann','Modúl'],
+  ['Lecture','Léacht','Clárú','Athshuí','Measúnú'],
+  ['Lecture theatre','Léachtlann','Léacht','Seimineár','Rang teagaisc'],
+  ['Lecturer','Léachtóir','Comhairleoir léinn','Modúl','Seimineár'],
+  ['Assessment','Measúnú','Clárú','Athshuí','Léacht'],
+  ['Enrolment','Clárú','Measúnú','Céim le gradam','Modúl'],
+  ['Re-sit','Athshuí','Siollabas','Léachtlann','Clárú'],
+  ['Seminar','Seimineár','Rang teagaisc','Léacht','Modúl'],
+  ['Tutorial','Rang teagaisc','Seimineár','Léachtlann','Léacht'],
+  ['Module','Modúl','Siollabas','Léacht','Measúnú'],
+  ['Masters','Máistreacht','Dioplóma','Céim le gradam','Athshuí'],
+  ['Pass with Distinction','Céim le gradam','Pas le hardmholadh','Máistreacht','Clárú'],
+  ['Pass with Commendation','Pas le hardmholadh','Céim le gradam','Athshuí','Siollabas'],
+  ["Students' Union","Aontas na Mac Léinn","Comhairleoir léinn","Campas","Seimineár"],
+  ['Advisor of studies','Comhairleoir léinn','Aontas na Mac Léinn','Léachtóir','Comhairleoir gairmthreorach'],
+  ['Extenuating circumstances','Cúinsí maolaitheacha','Cúinsí speisialta','Seomra ranga','Measúnú speisialta'],
+  ['I am in two minds','Tá mé idir dhá chomhairle','Is beag orm é','Bíonn an t-am agam','Tá mé ar fáil'],
+  ['I hate / greatly dislike','Is beag orm','Ní maith liom','Is fuath liom','Tá mé míshásta'],
+  ['Students have a great life','Is aoibhinn beatha an scoláire','Is dócha go bhfuil siad sásta','Tá an t-am acu','Bíonn siad ag staidéar'],
+  ['To tell the truth','Déanta na fírinne','Is dócha sin','Ní fheicim difear','Mar sin de'],
+];
+
+// ══════════════════ BUILD ══════════════════
+const qa = document.getElementById('qa');
+aData.forEach((q,i)=>{
+  const {opts,idx}=pick4(q.correct,q.pool);
+  buildMC(qa,'a',i,i+1,1,`Cén aimsir, briathar agus réimniú? <span style="color:var(--teal);font-family:'DM Mono',monospace;font-size:1.1rem">${q.form}</span><br><span style="color:var(--dim);font-size:0.82rem;font-style:italic">${q.ctx}</span>`,null,opts,idx,q.correct,q.tip);
+});
+
+const qb=document.getElementById('qb');
+bData.forEach((q,i)=>{
+  buildTxt(qb,'b',i,i+1,q.pts,`<span style="color:var(--teal)">${q.q}</span>`,`Athraigh: ${q.target}`,q.answers,q.display,q.alt,q.tip);
+});
+
+const qc=document.getElementById('qc');
+cData.forEach((q,i)=>{
+  buildTxt(qc,'c',i,i+1,q.pts,q.en,'Aistrigh go Gaeilge',q.answers,q.display,q.alt,q.tip);
+});
+
+const qd=document.getElementById('qd');
+vocabPool.forEach((row,i)=>{
+  const [en,correct,...others]=row;
+  const opts=shuffle([correct,...others]);
+  const idx=opts.indexOf(correct);
+  buildMC(qd,'d',i,i+1,1,en,null,opts,idx,correct,`GA: <strong>${correct}</strong> = ${en}. EN: The correct Irish term for "${en}" is <strong>${correct}</strong>.`);
+});
+</script>
+</body>
+</html>
